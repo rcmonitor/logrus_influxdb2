@@ -4,8 +4,8 @@ Bug-reports, issues and pull request are kindly appreciated
 
 Kinda, based on [abramovic/logrus_influxdb](https://github.com/abramovic/logrus_influxdb)
 
-- [Examples](https://github.com/rmonitor/logrus_influxdb2/tree/master/examples)
-- [Logrus](https://github.com/Sirupsen/logrus)
+- [Examples](https://github.com/rcmonitor/logrus_influxdb2/tree/master/example)
+- [Logrus](https://github.com/sirupsen/logrus)
 - [InfluxDB](https://influxdb.com)
 
 #### [Contributors](https://github.com/rcmonitor/logrus_influxdb2/graphs/contributors)
