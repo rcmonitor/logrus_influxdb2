@@ -1,6 +1,6 @@
 # InfluxDB2 Hook for Logrus
 
-Bug-reports, issues and pull request are kindly appreciated
+Bug-reports, issues and pull requests are kindly appreciated
 
 Kinda, based on [abramovic/logrus_influxdb](https://github.com/abramovic/logrus_influxdb)
 
@@ -17,6 +17,7 @@ package main
 
 import (
     "fmt"
+    "time"
     
     "github.com/rcmonitor/logrus_influxdb2"
     "github.com/sirupsen/logrus"
@@ -50,7 +51,7 @@ func main() {
 When passing an empty string for the InfluxDB bucket name, it is set to "logrus".
 When passing an empty string for the InfluxDB measurement name, it is set to "logrus".
 
-When initializing the hook we attempt to first see if the bucket exists. If not, by default we try to create it for your automagically.
+When initializing the hook we attempt to see if the bucket exists. If not, by default we try to create it automatically.
 This behaviour can be changed by setting `Config.TConfigWriteAPI.RequireBucket` to `true`
 
 Measurement can be dynamically overwritten using `logrus.WithField/s()`
