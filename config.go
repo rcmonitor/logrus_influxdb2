@@ -123,15 +123,51 @@ type TConfigSyslog struct {
 }
 
 type TConfigLog struct {
+	//maximum level to log
+	//if provided, every level up to MaxLevel including
+	//considered worth logging
+	MaxLevel string
+	//list of levels to log
+	//precedes MaxLevel and LevelTitle
+	//if no levels provided using either MaxLevel, or Level list,
+	//all levels considered worth logging
 	Level []logrus.Level
+	//list of level titles to log
+	//precedes MaxLevel
+	LevelTitle []string
 }
 
 // defaultsLog sets up all log levels to involve influx
 // if none provided in config
-func (pConfigLog *TConfigLog) defaultsLog() {
+func (pConfigLog *TConfigLog) defaultsLog() error {
+	//levels defined with slice of logrus.Level
+	if 0 < len(pConfigLog.Level) {
+		return nil
+	}
+	//levels defined as slice of string literals
+	if 0 < len(pConfigLog.LevelTitle) {
+		for _, strLevel := range pConfigLog.LevelTitle {
+			if intLevel, err := logrus.ParseLevel(strLevel); nil != err {
+				return err
+			}else{
+				pConfigLog.Level = append(pConfigLog.Level, intLevel)
+			}
+		}
+	}
+	//levels defined as string literal of maximum loggable level
+	if "" != pConfigLog.MaxLevel {
+		intLevelOffset, err := logrus.ParseLevel(pConfigLog.MaxLevel)
+		if nil != err { return err }
+		//as soon as levels corresponds to offsets in defaultLevel array,
+		//we can rely on offset itself
+		pConfigLog.Level = defaultLevel[:intLevelOffset+ 1]
+	}
+	//no levels defined explicitly, let's fall back to defaults
 	if 0 == len(pConfigLog.Level) {
 		pConfigLog.Level = defaultLevel
 	}
+
+	return nil
 }
 
 // Check validates config
@@ -139,7 +175,7 @@ func (pConfigLog *TConfigLog) defaultsLog() {
 // or environment variables
 // acts as a decorator for sub-configs population and validation
 func (pConfig *Config) Check() error {
-	pConfig.defaultsLog()
+	if err := pConfig.defaultsLog(); nil != err { return err }
 	pConfig.defaultsWriteAPI()
 	return pConfig.defaultsClient()
 }
